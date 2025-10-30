@@ -1,8 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/category/[slug]/page": "app/category/[slug]/page.js",
-  "/article/[slug]/page": "app/article/[slug]/page.js",
-  "/login/page": "app/login/page.js",
-  "/signup/page": "app/signup/page.js",
-  "/article/tent-selection-guide/page": "app/article/tent-selection-guide/page.js"
-}

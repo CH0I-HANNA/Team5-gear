@@ -54,7 +54,11 @@ public class AuthController {
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(signUpRequest.getPassword());
 
-        authService.registerUser(user);
+        try {
+            authService.registerUser(user);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(e.getMessage()));
+        }
 
         return ResponseEntity.ok(new ApiResponse("회원가입이 완료되었습니다."));
     }

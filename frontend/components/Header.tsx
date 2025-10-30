@@ -53,15 +53,12 @@ export default function Header() {
         <div className="ml-auto flex items-center gap-3 w-full md:w-auto">
           <div className="flex-1 md:flex-none md:w-[360px]">
             <SearchBox
-              placeholder="장비, 카테고리, 기사 검색"
+              placeholder="장비, 카테고리, 기사를 검색하세요"
               onSubmit={(q) => router.push(`${routes.search}?q=${encodeURIComponent(q)}`)}
             />
           </div>
 
-          <AuthButtons
-            onLogin={() => router.push(routes.login)}
-            onSignup={() => router.push(routes.signup)}
-          />
+          <AuthButtons />
         </div>
       </div>
     </header>

@@ -9,13 +9,23 @@ export default function AuthButtons() {
     return (
         <div className="flex items-center gap-2">
             {isAuthenticated ? (
-                <button
-                    onClick={logout}
-                    className="rounded-xl border px-3 py-2 text-sm hover:bg-gray-50"
-                    aria-label="로그아웃"
-                >
-                    로그아웃
-                </button>
+                <>
+                    <Link href="/mypage">
+                        <button
+                            className="rounded-xl border px-3 py-2 text-sm hover:bg-gray-50"
+                            aria-label="마이페이지"
+                        >
+                            마이페이지
+                        </button>
+                    </Link>
+                    <button
+                        onClick={logout}
+                        className="rounded-xl border px-3 py-2 text-sm hover:bg-gray-50"
+                        aria-label="로그아웃"
+                    >
+                        로그아웃
+                    </button>
+                </>
             ) : (
                 <>
                     <Link href="/login">

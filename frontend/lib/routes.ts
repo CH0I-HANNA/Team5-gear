@@ -8,4 +8,5 @@ export const routes = {
   categorySwimming: "/category/swimming",
   categoryGolf: "/category/golf",
   articleTentSelectionGuide: "/article/tent-selection-guide",
+  mypage: "/mypage",
 } as const;

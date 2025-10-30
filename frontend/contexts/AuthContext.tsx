@@ -1,12 +1,13 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { login as apiLogin, signup as apiSignup } from '../lib/auth';
-import { LoginRequest, SignUpRequest } from '../types/auth';
+import { login as apiLogin, signup as apiSignup, getUser } from '../lib/auth';
+import { LoginRequest, SignUpRequest, User } from '../types/auth';
 
 interface AuthContextType {
     isAuthenticated: boolean;
     token: string | null;
+    user: User | null; // Add user to the context
     login: (credentials: LoginRequest) => Promise<void>;
     signup: (userData: SignUpRequest) => Promise<void>;
     logout: () => void;
@@ -16,11 +17,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [token, setToken] = useState<string | null>(null);
+    const [user, setUser] = useState<User | null>(null); // Add user state
 
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
         if (storedToken) {
             setToken(storedToken);
+            getUser(storedToken).then(setUser).catch(() => {
+                // Handle error fetching user, e.g., token expired
+                logout();
+            });
         }
     }, []);
 
@@ -28,6 +34,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const data = await apiLogin(credentials);
         setToken(data.accessToken);
         localStorage.setItem('token', data.accessToken);
+        const userData = await getUser(data.accessToken); // Fetch user data
+        setUser(userData); // Set user state
     };
 
     const signup = async (userData: SignUpRequest) => {
@@ -37,11 +45,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const logout = () => {
         setToken(null);
+        setUser(null); // Clear user state
         localStorage.removeItem('token');
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated: !!token, token, login, signup, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated: !!token, token, user, login, signup, logout }}>
             {children}
         </AuthContext.Provider>
     );
