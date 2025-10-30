@@ -49,7 +49,8 @@ const MyPageInfo = () => {
       <div className="flex flex-col items-center md:flex-row md:items-start md:space-x-8">
         <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-md mb-6 md:mb-0">
           <Image
-            src={user.profileImageUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb"}
+
+            src={user.profileImageUrl || "https://cdn-icons-png.flaticon.com/512/847/847969.png"}
             alt="프로필 이미지"
             layout="fill"
             objectFit="cover"

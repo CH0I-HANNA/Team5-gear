@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 import { login as apiLogin, signup as apiSignup, getUser } from '../lib/auth';
 import { LoginRequest, SignUpRequest, User } from '../types/auth';
 
@@ -20,6 +21,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [token, setToken] = useState<string | null>(null);
     const [user, setUser] = useState<User | null>(null); // Add user state
+    const router = useRouter();
 
     useEffect(() => {
         const storedToken = Cookies.get('accessToken');
@@ -49,6 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setToken(null);
         setUser(null); // Clear user state
         Cookies.remove('accessToken');
+        router.push('/');
     };
 
     const updateUser = (newUser: User) => {

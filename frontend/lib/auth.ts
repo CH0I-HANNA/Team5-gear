@@ -12,7 +12,8 @@ export const login = async (credentials: LoginRequest) => {
     });
 
     if (!response.ok) {
-        throw new Error('Login failed');
+        const errorData = await response.json().catch(() => ({ message: 'Login failed' }));
+        throw new Error(errorData.message || 'Login failed');
     }
 
     return response.json();

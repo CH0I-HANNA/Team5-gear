@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.multipart.MultipartFile;
 import java.security.Principal;
+import com.team5.gear.dto.ChangePasswordRequest;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -77,6 +80,34 @@ public class AuthController {
         try {
             User updatedUser = authService.updateProfileImage(email, file);
             return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(e.getMessage()));
+        }
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(401).body(new ApiResponse("User not authenticated"));
+        }
+        String userEmail = principal.getName();
+        try {
+            authService.changePassword(userEmail, changePasswordRequest.getCurrentPassword(), changePasswordRequest.getNewPassword());
+            return ResponseEntity.ok(new ApiResponse("Password changed successfully."));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/delete-account")
+    public ResponseEntity<?> deleteAccount(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(401).body(new ApiResponse("User not authenticated"));
+        }
+        String userEmail = principal.getName();
+        try {
+            authService.deleteAccount(userEmail);
+            return ResponseEntity.ok(new ApiResponse("Account deleted successfully."));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(e.getMessage()));
         }

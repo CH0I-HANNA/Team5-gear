@@ -44,4 +44,22 @@ public class AuthService {
         user.setProfileImageUrl(fileDownloadUri);
         return userRepository.save(user);
     }
+
+    public User changePassword(String userEmail, String currentPassword, String newPassword) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new RuntimeException("Incorrect current password");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return userRepository.save(user);
+    }
+
+    public void deleteAccount(String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.delete(user);
+    }
 }
