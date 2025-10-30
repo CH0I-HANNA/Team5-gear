@@ -17,9 +17,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
     @Autowired
@@ -61,5 +66,19 @@ public class AuthController {
         }
 
         return ResponseEntity.ok(new ApiResponse("회원가입이 완료되었습니다."));
+    }
+
+    @PostMapping("/profile/image")
+    public ResponseEntity<?> updateProfileImage(@RequestParam("file") MultipartFile file, Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.badRequest().body(new ApiResponse("User not authenticated"));
+        }
+        String email = principal.getName();
+        try {
+            User updatedUser = authService.updateProfileImage(email, file);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(e.getMessage()));
+        }
     }
 }

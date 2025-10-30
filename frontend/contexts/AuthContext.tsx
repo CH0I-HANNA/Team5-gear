@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import Cookies from 'js-cookie';
 import { login as apiLogin, signup as apiSignup, getUser } from '../lib/auth';
 import { LoginRequest, SignUpRequest, User } from '../types/auth';
 
@@ -11,6 +12,7 @@ interface AuthContextType {
     login: (credentials: LoginRequest) => Promise<void>;
     signup: (userData: SignUpRequest) => Promise<void>;
     logout: () => void;
+    updateUser: (user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,7 +22,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null); // Add user state
 
     useEffect(() => {
-        const storedToken = localStorage.getItem('token');
+        const storedToken = Cookies.get('accessToken');
         if (storedToken) {
             setToken(storedToken);
             getUser(storedToken).then(setUser).catch(() => {
@@ -33,7 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = async (credentials: LoginRequest) => {
         const data = await apiLogin(credentials);
         setToken(data.accessToken);
-        localStorage.setItem('token', data.accessToken);
+        Cookies.set('accessToken', data.accessToken);
         const userData = await getUser(data.accessToken); // Fetch user data
         setUser(userData); // Set user state
     };
@@ -46,11 +48,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const logout = () => {
         setToken(null);
         setUser(null); // Clear user state
-        localStorage.removeItem('token');
+        Cookies.remove('accessToken');
+    };
+
+    const updateUser = (newUser: User) => {
+        setUser(newUser);
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated: !!token, token, user, login, signup, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated: !!token, token, user, login, signup, logout, updateUser }}>
             {children}
         </AuthContext.Provider>
     );

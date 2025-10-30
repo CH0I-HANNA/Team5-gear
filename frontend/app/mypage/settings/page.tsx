@@ -1,8 +1,6 @@
 
 "use client";
 
-import MyPageHeader from "@/components/MyPage/MyPageHeader";
-
 const MyPageSettings = () => {
   return (
     <div className="bg-white shadow-md rounded-lg p-6 mb-6">
@@ -23,12 +21,5 @@ const MyPageSettings = () => {
 };
 
 export default function SettingsPage() {
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <MyPageHeader />
-      <div className="mt-8">
-        <MyPageSettings />
-      </div>
-    </div>
-  );
+  return <MyPageSettings />;
 }

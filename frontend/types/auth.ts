@@ -1,8 +1,9 @@
 export interface User {
-    profileImage: string | null;
-    nickname: string;
+    id: number;
+    username: string;
     email: string;
-    joinDate: string;
+    profileImageUrl: string | null;
+    createdAt: string;
 }
 
 export interface SignUpRequest {
