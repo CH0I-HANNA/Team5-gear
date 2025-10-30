@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 필요 시 기본 여백 조정 등 최소 설정 */
+html, body { height: 100%; }
