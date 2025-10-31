@@ -11,7 +11,12 @@ interface Article {
   author: string;
   createdAt: string;
   content: string;
-  category: string; // Assuming Article has a category field
+  category: {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+  };
 }
 
 type Props = {
@@ -22,8 +27,10 @@ type Props = {
 
 const categoryNames: { [key: string]: string } = {
   camping: "캠핑",
-  swimming: "수영",
-  golf: "골프",
+  hiking: "등산",
+  fishing: "낚시",
+  climbing: "클라이밍",
+
 };
 
 export default function CategoryPage({ params }: Props) {
@@ -37,12 +44,10 @@ export default function CategoryPage({ params }: Props) {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch(`/api/articles`);
+        const response = await fetch(`/api/categories/${slug}/articles`);
         if (response.ok) {
           const data: Article[] = await response.json();
-          // Filter articles by category on the frontend
-          const filteredArticles = data.filter(article => article.category === categoryName);
-          setArticles(filteredArticles);
+          setArticles(data);
         } else {
           setError('Failed to fetch articles');
         }
@@ -54,7 +59,7 @@ export default function CategoryPage({ params }: Props) {
     };
 
     fetchArticles();
-  }, [slug, categoryName]);
+  }, [slug]);
 
   if (loading) {
     return <p>Loading articles...</p>;
