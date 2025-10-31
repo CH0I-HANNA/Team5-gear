@@ -58,4 +58,8 @@ public class ArticleService {
             return true;
         }).orElse(false);
     }
+
+    public List<Article> getArticlesByCategorySlug(String slug) {
+        return articleRepository.findByCategorySlug(slug);
+    }
 }

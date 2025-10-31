@@ -143,6 +143,9 @@ INSERT INTO article (slug, title, author, description, content, category_id, cre
 INSERT INTO article (slug, title, author, description, content, category_id, created_at, updated_at) VALUES
 ('eco-friendly-camping-tips', '지속 가능한 캠핑을 위한 친환경 팁', '그린 캠퍼', '아름다운 자연을 보호하며 캠핑을 즐기기 위한 친환경 실천 방법들을 알아봅니다. 우리 모두 지속 가능한 캠핑 문화를 만들어가요.', '캠핑은 자연을 만끽하는 활동이지만, 동시에 자연에 영향을 줄 수도 있습니다. 지속 가능한 캠핑은 우리가 사랑하는 자연을 다음 세대에게도 물려주기 위한 중요한 실천입니다. 이 글에서는 쓰레기 줄이기, 친환경 세제 사용, 불 피우기 주의사항 등 환경을 보호하면서 캠핑을 즐길 수 있는 다양한 팁을 제공합니다. 작은 실천들이 모여 큰 변화를 만들 수 있습니다. 우리 모두 책임감 있는 캠퍼가 되어 아름다운 자연을 지켜나가요.', (SELECT category_id FROM category WHERE slug = 'camping'), NOW(), NOW());
 
+INSERT INTO article (slug, title, author, description, content, category_id, created_at, updated_at) VALUES
+('tent-selection-guide', '나에게 딱 맞는 텐트 고르기: 완벽 가이드', '텐트 전문가', '수많은 텐트 종류 속에서 어떤 텐트를 선택해야 할지 막막하신가요? 캠핑 스타일, 인원, 계절, 예산에 맞춰 최적의 텐트를 선택하는 방법을 알려드립니다.', '텐트는 캠핑의 가장 기본이 되는 장비이자, 자연 속 나의 집입니다. 따라서 어떤 텐트를 선택하느냐가 캠핑의 전체적인 만족도를 좌우할 수 있습니다. 이 가이드에서는 돔 텐트, 터널형 텐트, 티피 텐트 등 다양한 텐트의 종류와 각각의 장단점을 비교 분석하고, 나의 캠핑 스타일에 맞는 텐트를 고르는 노하우를 공유합니다. 또한, 텐트의 재질, 방수 기능, 설치 편의성 등 구매 전 반드시 확인해야 할 체크리스트와 예산별 추천 제품까지, 텐트 선택에 대한 모든 궁금증을 해결해 드립니다.', (SELECT category_id FROM category WHERE slug = 'camping'), NOW(), NOW());
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
