@@ -14,16 +14,30 @@ export default function LoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
+
+        if (!email) {
+            setError("아이디를 입력해 주세요."); // Using '아이디' as per errorMessage.md for consistency
+            return;
+        }
+        if (!password) {
+            setError("비밀번호를 입력해 주세요.");
+            return;
+        }
+
         try {
             await login({ email, password });
             router.push('/');
-        } catch (error) {
-            console.error(error);
-            if (error instanceof Error) {
-                setError(error.message);
-            } else {
-                setError('An unknown error occurred.');
+        } catch (err: any) {
+            console.error(err);
+            let errorMessage = "일시적인 오류로 로그인을 할 수 없습니다. 잠시 후 다시 이용해 주세요.";
+            if (err.message) {
+                if (err.message.includes("Bad credentials") || err.message.includes("Authentication Failed")) {
+                    errorMessage = "등록되지 않은 아이디이거나 아이디 또는 비밀번호를 잘못 입력했습니다.";
+                } else {
+                    errorMessage = err.message;
+                }
             }
+            setError(errorMessage);
         }
     };
 
@@ -40,7 +54,7 @@ export default function LoginPage() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            required
+                            //required
                         />
                     </div>
                     <div>
@@ -50,7 +64,7 @@ export default function LoginPage() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            required
+                            //required
                         />
                     </div>
                     <button
