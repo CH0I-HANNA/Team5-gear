@@ -1,4 +1,18 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
+interface Article {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  author: string;
+  createdAt: string;
+  content: string;
+  category: string; // Assuming Article has a category field
+}
 
 type Props = {
   params: {
@@ -12,34 +26,43 @@ const categoryNames: { [key: string]: string } = {
   golf: "골프",
 };
 
-// Add slug to each article for URL routing
-const campingArticles = [
-  {
-    slug: "tent-guide-for-beginners",
-    title: "초보 캠퍼를 위한 필수 텐트 선택 가이드",
-    description: "첫 캠핑, 어떤 텐트를 사야 할지 막막하신가요? 가격대별, 종류별 텐트를 비교하고 나에게 맞는 최고의 텐트를 찾아보세요.",
-    author: "김캠핑",
-    date: "2025년 10월 28일",
-  },
-  {
-    slug: "camping-lanterns-for-mood",
-    title: "감성 캠핑의 시작, 랜턴 하나로 분위기 끝내기",
-    description: "가스, 가솔린, LED 랜턴의 장단점을 비교하고 당신의 캠핑 스타일에 맞는 감성 랜턴을 추천해 드립니다.",
-    author: "박감성",
-    date: "2025년 10월 25일",
-  },
-  {
-    slug: "mastering-bbq-grills",
-    title: "캠핑의 꽃, 바베큐 그릴 완벽 정복",
-    description: "숯, 가스 그릴부터 그리들까지. 캠핑 바베큐를 위한 모든 종류의 그릴을 알아보고 맛있는 캠핑 요리를 즐겨보세요.",
-    author: "이요리",
-    date: "2025년 10월 22일",
-  },
-];
-
 export default function CategoryPage({ params }: Props) {
   const { slug } = params;
   const categoryName = categoryNames[slug] || "알 수 없는 카테고리";
+
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch(`/api/articles`);
+        if (response.ok) {
+          const data: Article[] = await response.json();
+          // Filter articles by category on the frontend
+          const filteredArticles = data.filter(article => article.category === categoryName);
+          setArticles(filteredArticles);
+        } else {
+          setError('Failed to fetch articles');
+        }
+      } catch (err) {
+        setError('An error occurred while fetching articles');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticles();
+  }, [slug, categoryName]);
+
+  if (loading) {
+    return <p>Loading articles...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
     <section className="mx-auto max-w-4xl px-4 py-12">
@@ -50,9 +73,9 @@ export default function CategoryPage({ params }: Props) {
         </p>
       </div>
 
-      {slug === 'camping' && (
+      {articles.length > 0 ? (
         <div className="space-y-12">
-          {campingArticles.map((article, index) => (
+          {articles.map((article, index) => (
             <article key={index} className="flex flex-col md:flex-row items-center gap-8 p-6 md:p-8 rounded-2xl border border-gray-200 hover:shadow-xl transition-shadow duration-300">
               <div className="w-full md:w-1/3 flex-shrink-0">
                 <div className="aspect-video md:aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
@@ -63,16 +86,14 @@ export default function CategoryPage({ params }: Props) {
               </div>
               <div className="w-full md:w-2/3">
                 <h2 className="text-xl lg:text-2xl font-bold text-gray-900 tracking-tight">{article.title}</h2>
-                <p className="mt-2 text-sm text-gray-500">{article.author} · {article.date}</p>
+                <p className="mt-2 text-sm text-gray-500">{article.author} · {new Date(article.createdAt).toLocaleDateString()}</p>
                 <p className="mt-4 text-gray-700 leading-relaxed hidden sm:block">{article.description}</p>
                 <Link href={`/article/${article.slug}`} className="mt-4 inline-block font-medium text-indigo-600 hover:underline">자세히 보기 &rarr;</Link>
               </div>
             </article>
           ))}
         </div>
-      )}
-      
-      {slug !== 'camping' && (
+      ) : (
         <div className="text-center py-16">
           <p className="text-lg text-gray-500">이 카테고리에는 아직 기사가 없습니다.</p>
         </div>

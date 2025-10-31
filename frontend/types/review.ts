@@ -1,15 +1,18 @@
 import { User } from './auth';
 
-export interface Journal {
+export interface EquipmentForReview {
     id: number;
-    title: string;
-    rating: number;
+    name: string; // Assuming equipment has a name
+    // Add other relevant equipment fields if needed
 }
 
 export interface Review {
     id: number;
+    title: string; // From Review.java
     content: string;
+    rating: number; // From Review.java
     createdAt: string;
-    journal: Journal;
+    updatedAt: string; // From Review.java
+    equipment: EquipmentForReview; // Relationship to Equipment
     user: User;
 }

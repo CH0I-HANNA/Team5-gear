@@ -1,6 +1,7 @@
 package com.team5.gear.controller;
 
 import com.team5.gear.dto.ReviewRequest;
+import com.team5.gear.dto.ReviewResponse; // ADD
 import com.team5.gear.entity.Review;
 import com.team5.gear.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,26 +10,30 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors; // ADD
 
 @RestController
 @RequestMapping("/api/reviews")
-public class MyReviewController {
+public class UserReviewController {
 
     @Autowired
     private ReviewService reviewService;
 
     @GetMapping("/me")
-    public ResponseEntity<List<Review>> getMyReviews(Principal principal) {
+    public ResponseEntity<List<ReviewResponse>> getMyReviews(Principal principal) { // CHANGE
         if (principal == null) {
             return ResponseEntity.status(401).build();
         }
         String userEmail = principal.getName();
         List<Review> reviews = reviewService.getReviewsByUserEmail(userEmail);
-        return ResponseEntity.ok(reviews);
+        List<ReviewResponse> reviewResponses = reviews.stream() // ADD
+                .map(ReviewResponse::fromEntity) // ADD
+                .collect(Collectors.toList()); // ADD
+        return ResponseEntity.ok(reviewResponses); // CHANGE
     }
 
     @PutMapping("/{reviewId}")
-    public ResponseEntity<Review> updateReview(@PathVariable Long reviewId,
+    public ResponseEntity<ReviewResponse> updateReview(@PathVariable Long reviewId, // CHANGE
                                                @RequestBody ReviewRequest reviewRequest,
                                                Principal principal) {
         if (principal == null) {
@@ -37,7 +42,7 @@ public class MyReviewController {
         String userEmail = principal.getName();
         try {
             Review updatedReview = reviewService.updateReview(reviewId, reviewRequest.getContent(), userEmail);
-            return ResponseEntity.ok(updatedReview);
+            return ResponseEntity.ok(ReviewResponse.fromEntity(updatedReview)); // CHANGE
         } catch (RuntimeException e) {
             return ResponseEntity.status(403).build(); // Forbidden
         }

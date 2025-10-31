@@ -4,19 +4,19 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Review } from "@/types/review";
 
-interface CommentSectionProps {
-  journalId: number;
+interface ReviewSectionProps {
+  equipmentId: number;
 }
 
-const CommentSection = ({ journalId }: CommentSectionProps) => {
+const ReviewSection = ({ equipmentId }: ReviewSectionProps) => {
   const { token, isAuthenticated } = useAuth();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [newReview, setNewReview] = useState("");
 
   useEffect(() => {
-    if (!journalId) return;
+    if (!equipmentId) return;
     const fetchReviews = async () => {
-      const response = await fetch(`/api/journals/${journalId}/reviews`);
+      const response = await fetch(`/api/equipment/${equipmentId}/reviews`);
       if (response.ok) {
         const data = await response.json();
         setReviews(data);
@@ -24,12 +24,12 @@ const CommentSection = ({ journalId }: CommentSectionProps) => {
     };
 
     fetchReviews();
-  }, [journalId]);
+  }, [equipmentId]);
 
   const handleSubmitReview = async () => {
-    if (!token || !journalId) return;
+    if (!token || !equipmentId) return;
 
-    const response = await fetch(`/api/journals/${journalId}/reviews`, {
+    const response = await fetch(`/api/equipment/${equipmentId}/reviews`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -78,4 +78,4 @@ const CommentSection = ({ journalId }: CommentSectionProps) => {
   );
 };
 
-export default CommentSection;
+export default ReviewSection;

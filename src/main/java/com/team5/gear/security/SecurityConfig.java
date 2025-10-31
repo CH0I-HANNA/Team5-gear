@@ -54,7 +54,7 @@ public class SecurityConfig {
             .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(HttpMethod.GET, "/api/journals/{journalId}/reviews").permitAll()
+                .requestMatchers(HttpMethod.GET, "/**").permitAll()
                 .requestMatchers("/api/auth/login", "/api/auth/register", "/uploads/**").permitAll()
                 .anyRequest().authenticated()
             );

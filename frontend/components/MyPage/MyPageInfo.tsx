@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -49,7 +48,6 @@ const MyPageInfo = () => {
       <div className="flex flex-col items-center md:flex-row md:items-start md:space-x-8">
         <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-md mb-6 md:mb-0">
           <Image
-
             src={user.profileImageUrl || "https://cdn-icons-png.flaticon.com/512/847/847969.png"}
             alt="프로필 이미지"
             layout="fill"

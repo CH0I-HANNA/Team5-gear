@@ -1,9 +1,9 @@
 package com.team5.gear.service;
 
-import com.team5.gear.entity.Journal;
+import com.team5.gear.entity.Equipment;
 import com.team5.gear.entity.Review;
 import com.team5.gear.entity.User;
-import com.team5.gear.repository.JournalRepository;
+import com.team5.gear.repository.EquipmentRepository;
 import com.team5.gear.repository.ReviewRepository;
 import com.team5.gear.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +21,24 @@ public class ReviewService {
     private UserRepository userRepository;
 
     @Autowired
-    private JournalRepository journalRepository;
+    private EquipmentRepository equipmentRepository;
 
-    public Review createReview(Long journalId, String content, String userEmail) {
+    public Review createReview(Long equipmentId, String content, String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        Journal journal = journalRepository.findById(journalId)
-                .orElseThrow(() -> new RuntimeException("Journal not found"));
+        Equipment equipment = equipmentRepository.findById(equipmentId)
+                .orElseThrow(() -> new RuntimeException("Equipment not found"));
 
         Review review = new Review();
-        review.setJournal(journal);
+        review.setEquipment(equipment);
         review.setUser(user);
         review.setContent(content);
 
         return reviewRepository.save(review);
     }
 
-    public List<Review> getReviewsByJournalId(Long journalId) {
-        return reviewRepository.findByJournalId(journalId);
+    public List<Review> getReviewsByEquipmentId(Long equipmentId) {
+        return reviewRepository.findByEquipmentId(equipmentId);
     }
 
     public List<Review> getReviewsByUserEmail(String email) {

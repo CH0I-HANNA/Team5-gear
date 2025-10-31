@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,14 +22,21 @@ public class Review {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "journal_id")
-    private Journal journal;
-
-    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "equipment_id")
+    private Equipment equipment;
+
+    private String title;
+
     private String content;
+
+    private Integer rating;
+
+    @Column(name = "purchased_date")
+    private LocalDate purchasedDate;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();

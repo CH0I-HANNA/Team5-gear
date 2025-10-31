@@ -117,8 +117,8 @@ const MyPageReviews = () => {
         <div className="space-y-4">
           {reviews.map((review) => (
             <div key={review.id} className="border rounded-lg p-4">
-              <Link href={`/article/${review.journal.id}`}>
-                <p className="font-semibold hover:underline">{review.journal.title} - 평점: {review.journal.rating}점</p>
+              <Link href={`/equipment/${review.equipment.id}`}>
+                <p className="font-semibold hover:underline">{review.equipment.name} - 평점: {review.rating}점</p>
               </Link>
               {editingReviewId === review.id ? (
                 <div>

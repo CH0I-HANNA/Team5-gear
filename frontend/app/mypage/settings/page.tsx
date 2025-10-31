@@ -30,7 +30,7 @@ const MyPageSettings = () => {
     }
 
     if (newPassword.length < 6) {
-      setMessage("새 비밀번호는 6자 이상이어야 합니다.");
+      setMessage("새 비밀번호는 8~20자로 영문 대소문자, 숫자, 특수기호를 조합해서 사용하세요.");
       setMessageType("error");
       return;
     }
@@ -54,11 +54,11 @@ const MyPageSettings = () => {
         setNewPassword("");
         setConfirmNewPassword("");
       } else {
-        setMessage(data.message || "비밀번호 변경에 실패했습니다.");
+        setMessage(data.message || "일시적인 오류로 서비스 접속에 실패했습니다. 잠시 후 다시 시도해 주세요.");
         setMessageType("error");
       }
     } catch (error) {
-      setMessage("비밀번호 변경 중 오류가 발생했습니다.");
+      setMessage("일시적인 오류로 서비스 접속에 실패했습니다. 잠시 후 다시 시도해 주세요.");
       setMessageType("error");
       console.error("Error changing password:", error);
     }
@@ -90,11 +90,11 @@ const MyPageSettings = () => {
         setMessageType("success");
         logout(); // Log out after successful deletion
       } else {
-        setMessage(data.message || "회원 탈퇴에 실패했습니다.");
+        setMessage(data.message || "일시적인 오류로 서비스 접속에 실패했습니다. 잠시 후 다시 시도해 주세요.");
         setMessageType("error");
       }
     } catch (error) {
-      setMessage("회원 탈퇴 중 오류가 발생했습니다.");
+      setMessage("일시적인 오류로 서비스 접속에 실패했습니다. 잠시 후 다시 시도해 주세요.");
       setMessageType("error");
       console.error("Error deleting account:", error);
     }

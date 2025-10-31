@@ -6,41 +6,44 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "journal")
+@Table(name = "article")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Journal {
+public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "journal_id")
+    @Column(name = "article_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(unique = true, nullable = false)
+    private String slug;
 
-    @ManyToOne
-    @JoinColumn(name = "equipment_id")
-    private Equipment equipment;
-
+    @Column(nullable = false)
     private String title;
 
+    private String author;
+
+    @Column(length = 1000)
+    private String description;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
-
-    private Integer rating;
-
-    @Column(name = "purchased_date")
-    private LocalDate purchasedDate;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @Column(name = "category_id", insertable = false, updatable = false)
+    private Long categoryId;
 }
