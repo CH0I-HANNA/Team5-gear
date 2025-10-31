@@ -1,15 +1,14 @@
 package com.team5.gear.controller;
 
+import com.team5.gear.entity.Article;
+import com.team5.gear.entity.Category;
 import com.team5.gear.entity.Equipment;
+import com.team5.gear.repository.ArticleRepository;
+import com.team5.gear.repository.CategoryRepository;
 import com.team5.gear.repository.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/equipment")
@@ -18,33 +17,41 @@ import java.util.Map;
 public class EquipmentController {
 
     private final EquipmentRepository equipmentRepository;
+    private final CategoryRepository categoryRepository;
+    private final ArticleRepository articleRepository;
 
-    @PostMapping("/auto-insert")
-    public ResponseEntity<String> autoInsert(@RequestParam String productUrl) {
+    // ✅ 수동 입력용 API (JPA 연관관계 기반)
+    @PostMapping("/manual-insert")
+    public ResponseEntity<String> manualInsert(
+            @RequestParam String name,
+            @RequestParam String description,
+            @RequestParam String imageUrl,
+            @RequestParam String purchaseUrl,
+            @RequestParam int price,
+            @RequestParam Long categoryId,
+            @RequestParam Long articleId
+    ) {
         try {
-            String pythonApiUrl = "http://localhost:8000/crawl?url=" +
-                    URLEncoder.encode(productUrl, StandardCharsets.UTF_8);
-            RestTemplate restTemplate = new RestTemplate();
-            Map<String, Object> data = restTemplate.getForObject(pythonApiUrl, Map.class);
+            Equipment equipment = new Equipment();
+            equipment.setName(name);
+            equipment.setDescription(description);
+            equipment.setImageUrl(imageUrl);
+            equipment.setPurchaseUrl(purchaseUrl);
+            equipment.setPrice(price);
 
-            if (data != null) {
-                Equipment equipment = new Equipment();
-                equipment.setName((String) data.get("name"));
-                equipment.setPrice(parsePrice((String) data.get("price")));
-                equipment.setImageUrl((String) data.get("image_url"));
-                equipment.setPurchaseUrl(productUrl);
-                equipmentRepository.save(equipment);
-                return ResponseEntity.ok("장비 데이터가 DB에 성공적으로 저장되었습니다.");
-            } else {
-                return ResponseEntity.badRequest().body("데이터를 가져오지 못했습니다.");
-            }
+            // ✅ Category, Article 엔티티 주입
+            Category category = categoryRepository.findById(categoryId).orElse(null);
+            Article article = articleRepository.findById(articleId).orElse(null);
+
+            equipment.setCategory(category);
+            equipment.setArticle(article);
+
+            equipmentRepository.save(equipment);
+
+            return ResponseEntity.ok("장비 데이터가 DB에 성공적으로 저장되었습니다.");
+
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("오류 발생: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("DB 저장 중 오류 발생: " + e.getMessage());
         }
-    }
-
-    private int parsePrice(String priceString) {
-        if (priceString == null) return 0;
-        return Integer.parseInt(priceString.replaceAll("[^0-9]", ""));
     }
 }

@@ -29,7 +29,7 @@ public class Equipment {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "purchase_url")
+    @Column(name = "purchase_url", columnDefinition = "TEXT")
     private String purchaseUrl;
 
     @Column(name = "price")
