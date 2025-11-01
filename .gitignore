@@ -1,9 +1,57 @@
+# =========================
+# Build & Dependency Folders
+# =========================
+/target/
+/build/
+/out/
+/bin/
+/dist/
+/gradle/
+/node_modules/
+
+# =========================
+# Environment / Config Files
+# =========================
+*.env
+application.yml
+application.properties
+
+# =========================
+# System Files
+# =========================
+Thumbs.db
+*.swp
+*.swo
+
+# =========================
+# Others
+# =========================
+/coverage/
+/tmp/
+/.cache/
+/logs/
+/uploads/
+
+
+
+
+
 HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+
+# =========================
+# OS / Editor / IDE
+# =========================
+.DS_Store
+.idea/
+.vscode/
+*.iml
+*.class
+*.log
 
 ### STS ###
 .apt_generated
@@ -20,7 +68,6 @@ bin/
 ### IntelliJ IDEA ###
 .idea
 *.iws
-*.iml
 *.ipr
 out/
 !**/src/main/**/out/
@@ -29,17 +76,10 @@ out/
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
-/dist/
 /nbdist/
 /.nb-gradle/
 
 ### VS Code ###
-.vscode/
-node_modules/
-
 node_modules/
 .env
-.DS_Store
-.idea/
-*.log
 uploads/
