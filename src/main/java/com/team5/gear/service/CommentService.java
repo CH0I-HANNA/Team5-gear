@@ -9,18 +9,21 @@ import com.team5.gear.repository.CommentRepository;
 import com.team5.gear.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CommentService {
 
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
 
-    // 간단한 버전: 파라미터로 userId, content 받기
+    @Transactional
     public CommentResponse createCommentSimple(Long articleId, Long userId, String content) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("Article not found"));
@@ -35,25 +38,26 @@ public class CommentService {
 
         Comment saved = commentRepository.save(comment);
 
-        return CommentResponse.builder()
-                .id(saved.getId())
-                .content(saved.getContent())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .createdAt(saved.getCreatedAt())
-                .build();
+        return CommentResponse.fromEntity(saved);
     }
 
     public List<CommentResponse> getComments(Long articleId) {
         return commentRepository.findByArticleId(articleId)
                 .stream()
-                .map(c -> CommentResponse.builder()
-                        .id(c.getId())
-                        .content(c.getContent())
-                        .username(c.getUser().getUsername())
-                        .email(c.getUser().getEmail())
-                        .createdAt(c.getCreatedAt())
-                        .build())
+                .map(CommentResponse::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public CommentResponse updateComment(Long commentId, String content) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+        comment.update(content);
+        return CommentResponse.fromEntity(comment);
+    }
+
+    @Transactional
+    public void deleteComment(Long commentId) {
+        commentRepository.deleteById(commentId);
     }
 }

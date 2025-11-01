@@ -16,19 +16,31 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    // 댓글 등록 (userId를 쿼리 파라미터로 받음)
     @PostMapping
     public ResponseEntity<CommentResponse> createComment(
             @PathVariable("articleId") Long articleId,
             @RequestParam("userId") Long userId,
-            @RequestParam("content") String content
+            @RequestBody CommentRequest commentRequest
     ) {
-        return ResponseEntity.ok(commentService.createCommentSimple(articleId, userId, content));
+        return ResponseEntity.ok(commentService.createCommentSimple(articleId, userId, commentRequest.getContent()));
     }
 
-    // 댓글 목록 조회
     @GetMapping
     public ResponseEntity<List<CommentResponse>> getComments(@PathVariable Long articleId) {
         return ResponseEntity.ok(commentService.getComments(articleId));
+    }
+
+    @PutMapping("/{commentId}")
+    public ResponseEntity<CommentResponse> updateComment(
+            @PathVariable("commentId") Long commentId,
+            @RequestBody CommentRequest commentRequest
+    ) {
+        return ResponseEntity.ok(commentService.updateComment(commentId, commentRequest.getContent()));
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable("commentId") Long commentId) {
+        commentService.deleteComment(commentId);
+        return ResponseEntity.noContent().build();
     }
 }
