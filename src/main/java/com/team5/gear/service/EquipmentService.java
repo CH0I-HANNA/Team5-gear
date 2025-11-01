@@ -16,4 +16,16 @@ public class EquipmentService {
     public List<Equipment> getEquipmentsByArticleSlug(String slug) {
         return equipmentRepository.findByArticleSlug(slug);
     }
+
+    public List<Equipment> getAllProducts() {
+        return equipmentRepository.findAll();
+    }
+
+    public Equipment getProductById(Long equipmentId) {
+        return equipmentRepository.findById(equipmentId).orElse(null);
+    }
+
+    public Equipment createProduct(Equipment equipment) {
+        return equipmentRepository.save(equipment);
+    }
 }
