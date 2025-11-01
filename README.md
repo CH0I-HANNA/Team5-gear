@@ -120,15 +120,5 @@ jwt:
 - 요청 검증: `JwtAuthenticationFilter`가 Authorization Bearer 토큰 파싱·검증 후 `SecurityContext`에 주입
 - CORS: 기본 허용(개발 편의). 운영 시 도메인 화이트리스트로 제한 권장
 
-## API 사용 예시
-로그인
-```bash
-curl -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"hana@example.com","password":"1234"}'
-```
-응답의 `token`으로 사용자 정보 조회
-```bash
-curl http://localhost:8080/api/user/me -H "Authorization: Bearer <TOKEN>"
-```
+### AI 활용 
 
