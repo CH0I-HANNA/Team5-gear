@@ -17,3 +17,4 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     @Query("SELECT a FROM Article a WHERE a.category.slug = :slug")
     List<Article> findByCategorySlug(@Param("slug") String slug);
 }
+
