@@ -17,6 +17,8 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
@@ -43,3 +45,4 @@ node_modules/
 .idea/
 *.log
 uploads/
+src/main/resources/application.yml

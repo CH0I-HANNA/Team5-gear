@@ -30,6 +30,8 @@ const categoryNames: Record<string, string> = {
   hiking: "등산",
   fishing: "낚시",
   climbing: "클라이밍",
+  cycling: "자전거",
+  tennis: "테니스"
 };
 
 export default function CategoryPage({ params }: Props) {
