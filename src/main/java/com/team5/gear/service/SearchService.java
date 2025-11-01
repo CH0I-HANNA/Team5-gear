@@ -19,27 +19,27 @@ public class SearchService {
 
     private final EquipmentRepository equipmentRepository;
 
-    public Map<String, Object> searchEquipments(String query, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Equipment> resultPage = equipmentRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrCategory_NameContainingIgnoreCase(
-                query, query, query, pageable
-        );
+//    public Map<String, Object> searchEquipments(String query, int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<Equipment> resultPage = equipmentRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrCategory_NameContainingIgnoreCase(
+//                query, query, query, pageable
+//        );
+//
+//        List<EquipmentResponse> content = resultPage.getContent()
+//                .stream().map(EquipmentResponse::fromEntity).toList();
+//
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("query", query);
+//        response.put("page", resultPage.getNumber());
+//        response.put("totalPages", resultPage.getTotalPages());
+//        response.put("totalElements", resultPage.getTotalElements());
+//        response.put("results", content);
+//
+//        return response;
+//    }
 
-        List<EquipmentResponse> content = resultPage.getContent()
-                .stream().map(EquipmentResponse::fromEntity).toList();
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("query", query);
-        response.put("page", resultPage.getNumber());
-        response.put("totalPages", resultPage.getTotalPages());
-        response.put("totalElements", resultPage.getTotalElements());
-        response.put("results", content);
-
-        return response;
-    }
-
-    public List<String> getSuggestions(String keyword) {
-        List<Equipment> equipments = equipmentRepository.findTop5ByNameContainingIgnoreCase(keyword);
-        return equipments.stream().map(Equipment::getName).toList();
-    }
+//    public List<String> getSuggestions(String keyword) {
+//        List<Equipment> equipments = equipmentRepository.findTop5ByNameContainingIgnoreCase(keyword);
+//        return equipments.stream().map(Equipment::getName).toList();
+//    }
 }

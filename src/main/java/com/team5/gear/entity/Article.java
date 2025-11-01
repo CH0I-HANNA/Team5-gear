@@ -1,5 +1,6 @@
 package com.team5.gear.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "article")
@@ -46,4 +49,8 @@ public class Article {
 
     @Column(name = "category_id", insertable = false, updatable = false)
     private Long categoryId;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Equipment> equipments = new ArrayList<>();
 }

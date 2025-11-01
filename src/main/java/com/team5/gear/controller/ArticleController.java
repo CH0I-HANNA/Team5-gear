@@ -1,7 +1,9 @@
 package com.team5.gear.controller;
 
 import com.team5.gear.entity.Article;
+import com.team5.gear.entity.Equipment;
 import com.team5.gear.service.ArticleService;
+import com.team5.gear.service.EquipmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,19 +15,19 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/articles")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000") // Next.js 프론트엔드 허용
+@CrossOrigin(origins = "http://localhost:3000") // 프론트엔드 허용
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final EquipmentService equipmentService; // ✅ 추가
 
     // ✅ 전체 기사 조회
     @GetMapping
     public ResponseEntity<List<Article>> getAllArticles() {
-        List<Article> articles = articleService.getAllArticles();
-        return ResponseEntity.ok(articles);
+        return ResponseEntity.ok(articleService.getAllArticles());
     }
 
-    // ✅ 단일 기사 조회 (slug 기반)
+    // ✅ 단일 기사 조회
     @GetMapping("/{slug}")
     public ResponseEntity<?> getArticleBySlug(@PathVariable("slug") String slug) {
         return articleService.getArticleBySlug(slug)
@@ -37,21 +39,31 @@ public class ArticleController {
     // ✅ 카테고리별 기사 조회
     @GetMapping("/category/{slug}")
     public ResponseEntity<?> getArticlesByCategory(@PathVariable("slug") String slug) {
-        List<Article> articles = articleService.getArticlesByCategorySlug(slug);
-
+        var articles = articleService.getArticlesByCategorySlug(slug);
         if (articles.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("message", "이 카테고리에는 아직 기사가 없습니다."));
         }
-
         return ResponseEntity.ok(articles);
+    }
+
+    // ✅ 기사별 연결된 장비 조회 (새로 추가)
+    @GetMapping("/{slug}/equipments")
+    public ResponseEntity<?> getEquipmentsByArticleSlug(@PathVariable("slug") String slug) {
+        List<Equipment> equipments = equipmentService.getEquipmentsByArticleSlug(slug);
+
+        if (equipments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "이 기사에 연결된 장비가 없습니다."));
+        }
+
+        return ResponseEntity.ok(equipments);
     }
 
     // ✅ 기사 등록
     @PostMapping
     public ResponseEntity<Article> createArticle(@RequestBody Article article) {
-        Article createdArticle = articleService.createArticle(article);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdArticle);
+        return ResponseEntity.status(HttpStatus.CREATED).body(articleService.createArticle(article));
     }
 
     // ✅ 기사 수정
@@ -72,4 +84,6 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Map.of("message", "해당 ID의 기사를 찾을 수 없습니다."));
     }
+
+
 }

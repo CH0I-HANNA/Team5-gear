@@ -1,5 +1,6 @@
 package com.team5.gear.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,6 +47,7 @@ public class Equipment {
     // ✅ Article 연결
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")
+    @JsonBackReference
     private Article article;
 
     @Column(name = "created_at", updatable = false)

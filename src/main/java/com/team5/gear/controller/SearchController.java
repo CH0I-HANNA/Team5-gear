@@ -21,13 +21,13 @@ public class SearchController {
     private final SearchService searchService;
 
     // 검색 결과 조회
-    @GetMapping
-    public ResponseEntity<Map<String, Object>> search(
-            @RequestParam("query") String query,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
-
-        Map<String, Object> results = searchService.searchEquipments(query, page, size);
-        return ResponseEntity.ok(results);
-    }
+//    @GetMapping
+//    public ResponseEntity<Map<String, Object>> search(
+//            @RequestParam("query") String query,
+//            @RequestParam(value = "page", defaultValue = "0") int page,
+//            @RequestParam(value = "size", defaultValue = "10") int size) {
+//
+//        Map<String, Object> results = searchService.searchEquipments(query, page, size);
+//        return ResponseEntity.ok(results);
+//    }
 }
